@@ -88,6 +88,7 @@ def test_customize_renames_package_and_removes_unselected_assets(tmp_path: Path)
     assert not (tmp_path / "docker").exists()
     assert not (tmp_path / "k8s").exists()
     assert not (tmp_path / "docs" / "DOCKER.md").exists()
+    assert (tmp_path / ".github" / "workflows" / "ci.yml").is_file()
 
 
 def test_archive_rejects_path_traversal(tmp_path: Path) -> None:
