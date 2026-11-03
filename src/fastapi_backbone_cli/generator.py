@@ -130,7 +130,7 @@ def _customize_project(
                 shutil.rmtree(target)
             elif target.exists():
                 target.unlink()
-    readme = f"""# {display_name}
+    kubernetes_notice = (\n        "Kubernetes/Kustomize manifests are included."\n        if include_kubernetes\n        else "Kubernetes/Kustomize manifests are not included."\n    )\n    readme = f"""# {display_name}
 
 A backend service generated from [FastApiBackbone](https://github.com/safuh/FastApiBackbone).
 
