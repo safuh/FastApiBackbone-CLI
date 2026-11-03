@@ -8,8 +8,8 @@ import tarfile
 import tempfile
 import urllib.error
 import urllib.request
-from urllib.parse import quote
 from pathlib import Path, PurePosixPath
+from urllib.parse import quote
 
 DEFAULT_TEMPLATE_REF = "89832bc467d21453e73f2e822cae4224d0c5a955"
 TEMPLATE_REPOSITORY = "safuh/FastApiBackbone"
@@ -115,9 +115,6 @@ def _customize_project(
                 'known-first-party = ["fastapi_backbone"]',
                 f'known-first-party = ["{module_name}"]',
             )
-        if path.name == "uv.lock":
-            distribution_name = project_name.lower().replace("_", "-")
-            content = content.replace('name = "fastapi-backbone"', f'name = "{distribution_name}"')
         if path.name == "uv.lock":
             distribution_name = project_name.lower().replace("_", "-")
             content = content.replace('name = "fastapi-backbone"', f'name = "{distribution_name}"')
