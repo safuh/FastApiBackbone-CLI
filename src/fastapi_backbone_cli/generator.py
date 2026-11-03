@@ -8,6 +8,7 @@ import tarfile
 import tempfile
 import urllib.error
 import urllib.request
+from urllib.parse import quote
 from pathlib import Path, PurePosixPath
 
 DEFAULT_TEMPLATE_REF = "89832bc467d21453e73f2e822cae4224d0c5a955"
@@ -30,9 +31,10 @@ def _normalize_project_name(project_name: str) -> tuple[str, str]:
 
 
 def _download_archive(template_ref: str, destination: Path) -> None:
-    if not template_ref or template_ref.startswith("-") or "/" in template_ref:
+    if not template_ref or template_ref.startswith("-"):
         raise ValueError("Template ref must be a branch, tag, or commit identifier.")
-    url = f"https://github.com/{TEMPLATE_REPOSITORY}/archive/{template_ref}.tar.gz"
+    encoded_ref = quote(template_ref, safe="")
+    url = f"https://github.com/{TEMPLATE_REPOSITORY}/archive/{encoded_ref}.tar.gz"
     request = urllib.request.Request(url, headers={"User-Agent": "FastApiBackbone-CLI/0.1.0"})
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
@@ -113,6 +115,9 @@ def _customize_project(
                 'known-first-party = ["fastapi_backbone"]',
                 f'known-first-party = ["{module_name}"]',
             )
+        if path.name == "uv.lock":
+            distribution_name = project_name.lower().replace("_", "-")
+            content = content.replace('name = "fastapi-backbone"', f'name = "{distribution_name}"')
         if content != original:
             path.write_text(content, encoding="utf-8")
 
@@ -125,6 +130,48 @@ def _customize_project(
                 shutil.rmtree(target)
             elif target.exists():
                 target.unlink()
+    readme = f"""# {display_name}
+
+A backend service generated from [FastApiBackbone](https://github.com/safuh/FastApiBackbone).
+
+**Stack:** FastAPI · Pydantic · SQLAlchemy 2.x · Alembic · PostgreSQL
+
+## Quick start
+
+Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), and Docker if you use the container workflow.
+
+\`\`\`bash
+uv sync --extra dev
+cp .env.example .env
+make check
+make run
+\`\`\`
+
+The API documentation is available at http://127.0.0.1:8000/docs.
+
+## Database
+
+SQLite is configured for local development. Configure \`DATABASE_URL\` in \`.env\` for PostgreSQL, then run:
+
+\`\`\`bash
+make migrate-up
+\`\`\`
+
+## Docker
+
+Docker assets are {"included" if include_docker else "not included"}.
+{"Kubernetes/Kustomize manifests are included." if include_kubernetes else "Kubernetes/Kustomize manifests are not included."}
+
+## Architecture
+
+The project includes a FastAPI application factory, Pydantic Settings, async SQLAlchemy persistence,
+Alembic migrations, health/readiness endpoints, structured logging, authentication primitives,
+and tests. Review the security documentation before enabling authentication in production.
+
+This project is an independent copy. It does not retain the source repository's Git history.
+"""
+    (root / "README.md").write_text(readme, encoding="utf-8")
+
     if not include_kubernetes:
         shutil.rmtree(root / "k8s", ignore_errors=True)
 
