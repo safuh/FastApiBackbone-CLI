@@ -231,7 +231,7 @@ def generate_project(
                 source_root,
                 destination,
                 dirs_exist_ok=True,
-                ignore=shutil.ignore_patterns(".git", ".github", "__pycache__", ".venv"),
+                ignore=shutil.ignore_patterns(".git", "__pycache__", ".venv"),
             )
     except Exception:
         if destination.exists() and not destination_preexisted:
