@@ -130,6 +130,7 @@ def _customize_project(
                 shutil.rmtree(target)
             elif target.exists():
                 target.unlink()
+    kubernetes_notice = (
         "Kubernetes/Kustomize manifests are included."
         if include_kubernetes
         else "Kubernetes/Kustomize manifests are not included."
