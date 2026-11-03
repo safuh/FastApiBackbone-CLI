@@ -133,6 +133,37 @@ def _customize_project(
                 shutil.rmtree(target)
             elif target.exists():
                 target.unlink()
+    workflow_dir = root / ".github" / "workflows"
+    workflow_dir.mkdir(parents=True, exist_ok=True)
+    (workflow_dir / "ci.yml").write_text(
+        """name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: mypy src
+      - run: pytest -q
+""",
+        encoding="utf-8",
+    )
     kubernetes_notice = (
         "Kubernetes/Kustomize manifests are included."
         if include_kubernetes
@@ -231,7 +262,7 @@ def generate_project(
                 source_root,
                 destination,
                 dirs_exist_ok=True,
-                ignore=shutil.ignore_patterns(".git", "__pycache__", ".venv"),
+                ignore=shutil.ignore_patterns(".git", ".github", "__pycache__", ".venv"),
             )
     except Exception:
         if destination.exists() and not destination_preexisted:
