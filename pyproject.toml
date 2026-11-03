@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fastapi-backbone-cli"
+version = "0.1.0"
+description = "Generate independent FastAPI backend projects from FastApiBackbone."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+dependencies = ["typer>=0.12,<1.0", "rich>=13.9,<15.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<9.0", "pytest-cov>=5,<7", "ruff>=0.9,<1.0", "mypy>=1.13,<2.0"]
+
+[project.scripts]
+fastapi-backbone = "fastapi_backbone_cli.main:app"
+
+[project.urls]
+Homepage = "https://github.com/safuh/FastApiBackbone-CLI"
+Repository = "https://github.com/safuh/FastApiBackbone-CLI"
+Issues = "https://github.com/safuh/FastApiBackbone-CLI/issues"
+Template = "https://github.com/safuh/FastApiBackbone"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fastapi_backbone_cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src"]
