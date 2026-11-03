@@ -133,6 +133,7 @@ def _customize_project(
                 shutil.rmtree(target)
             elif target.exists():
                 target.unlink()
+        (root / "docs" / "DOCKER.md").unlink(missing_ok=True)
     workflow_dir = root / ".github" / "workflows"
     workflow_dir.mkdir(parents=True, exist_ok=True)
     (workflow_dir / "ci.yml").write_text(
