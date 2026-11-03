@@ -123,7 +123,10 @@ def _customize_project(
 
     if not include_docker:
         for relative in (
-            ".dockerignore", "docker", "scripts/docker-production.sh", "scripts/docker-smoke.sh"
+            ".dockerignore",
+            "docker",
+            "scripts/docker-production.sh",
+            "scripts/docker-smoke.sh",
         ):
             target = root / relative
             if target.is_dir():
@@ -217,8 +220,12 @@ def generate_project(
             _download_archive(template_ref, archive_path)
             source_root = _extract_archive(archive_path, extraction_path)
             _customize_project(
-                source_root, module_name, display_name, project_name,
-                include_docker, include_kubernetes,
+                source_root,
+                module_name,
+                display_name,
+                project_name,
+                include_docker,
+                include_kubernetes,
             )
             shutil.copytree(
                 source_root,
