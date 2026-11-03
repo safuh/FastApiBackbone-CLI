@@ -91,7 +91,7 @@ def _customize_project(
         "FastAPI Backbone": display_name,
     }
     for path in root.rglob("*"):
-        if not path.is_file() or path.is_symlink() or path.name == "uv.lock":
+        if not path.is_file() or path.is_symlink():
             continue
         try:
             content = path.read_text(encoding="utf-8")
@@ -115,6 +115,9 @@ def _customize_project(
                 'known-first-party = ["fastapi_backbone"]',
                 f'known-first-party = ["{module_name}"]',
             )
+        if path.name == "uv.lock":
+            distribution_name = project_name.lower().replace("_", "-")
+            content = content.replace('name = "fastapi-backbone"', f'name = "{distribution_name}"')
         if path.name == "uv.lock":
             distribution_name = project_name.lower().replace("_", "-")
             content = content.replace('name = "fastapi-backbone"', f'name = "{distribution_name}"')
@@ -174,6 +177,7 @@ This project is an independent copy. It does not retain the source repository's 
 
     if not include_kubernetes:
         shutil.rmtree(root / "k8s", ignore_errors=True)
+        (root / "docs" / "KUBERNETES.md").unlink(missing_ok=True)
 
 
 def generate_project(
@@ -191,7 +195,8 @@ def generate_project(
     parent.mkdir(parents=True, exist_ok=True)
     destination = (parent / project_name).resolve()
 
-    if destination.exists():
+    destination_preexisted = destination.exists()
+    if destination_preexisted:
         if not force:
             raise FileExistsError(f"Destination already exists: {destination}")
         if not destination.is_dir() or any(destination.iterdir()):
@@ -218,7 +223,7 @@ def generate_project(
                 ignore=shutil.ignore_patterns(".git", ".github", "__pycache__", ".venv"),
             )
     except Exception:
-        if destination.exists():
+        if destination.exists() and not destination_preexisted:
             shutil.rmtree(destination)
         raise
     return destination
