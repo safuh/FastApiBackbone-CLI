@@ -138,7 +138,7 @@ A backend service generated from [FastApiBackbone](https://github.com/safuh/Fast
 
 ## Quick start
 
-Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), and Docker if you use the container workflow.
+Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), and Docker if you use\nthe container workflow.
 
 ```bash
 uv sync --extra dev
@@ -151,7 +151,7 @@ The API documentation is available at http://127.0.0.1:8000/docs.
 
 ## Database
 
-SQLite is configured for local development. Configure `DATABASE_URL` in `.env` for PostgreSQL, then run:
+SQLite is configured for local development. Configure `DATABASE_URL` in `.env`\nfor PostgreSQL, then run:
 
 ```bash
 make migrate-up
@@ -160,7 +160,7 @@ make migrate-up
 ## Docker
 
 Docker assets are {"included" if include_docker else "not included"}.
-{"Kubernetes/Kustomize manifests are included." if include_kubernetes else "Kubernetes/Kustomize manifests are not included."}
+{\n    "Kubernetes/Kustomize manifests are included."\n    if include_kubernetes\n    else "Kubernetes/Kustomize manifests are not included."\n}
 
 ## Architecture
 
