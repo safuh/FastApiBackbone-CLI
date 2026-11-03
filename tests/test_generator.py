@@ -67,8 +67,12 @@ def test_customize_renames_package_and_removes_unselected_assets(tmp_path: Path)
         target.write_text("placeholder", encoding="utf-8")
 
     _customize_project(
-        tmp_path, "inventory_api", "Inventory Api", "inventory-api",
-        include_docker=False, include_kubernetes=False,
+        tmp_path,
+        "inventory_api",
+        "Inventory Api",
+        "inventory-api",
+        include_docker=False,
+        include_kubernetes=False,
     )
 
     assert (tmp_path / "src" / "inventory_api" / "__init__.py").read_text() == (
