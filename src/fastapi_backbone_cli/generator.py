@@ -130,7 +130,12 @@ def _customize_project(
                 shutil.rmtree(target)
             elif target.exists():
                 target.unlink()
-    kubernetes_notice = (\n        "Kubernetes/Kustomize manifests are included."\n        if include_kubernetes\n        else "Kubernetes/Kustomize manifests are not included."\n    )\n    readme = f"""# {display_name}
+    kubernetes_notice = (\n        "Kubernetes/Kustomize manifests are included."\n        if include_kubernetes\n        else "Kubernetes/Kustomize manifests are not included."\n    )\n    kubernetes_notice = (
+        "Kubernetes/Kustomize manifests are included."
+        if include_kubernetes
+        else "Kubernetes/Kustomize manifests are not included."
+    )
+    readme = f"""# {display_name}
 
 A backend service generated from [FastApiBackbone](https://github.com/safuh/FastApiBackbone).
 
@@ -138,7 +143,8 @@ A backend service generated from [FastApiBackbone](https://github.com/safuh/Fast
 
 ## Quick start
 
-Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), and Docker if you use\nthe container workflow.
+Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), and Docker if you use
+the container workflow.
 
 ```bash
 uv sync --extra dev
@@ -151,16 +157,17 @@ The API documentation is available at http://127.0.0.1:8000/docs.
 
 ## Database
 
-SQLite is configured for local development. Configure `DATABASE_URL` in `.env`\nfor PostgreSQL, then run:
+SQLite is configured for local development. Configure `DATABASE_URL` in `.env`
+for PostgreSQL, then run:
 
 ```bash
 make migrate-up
 ```
 
-## Docker
+## Deployment
 
 Docker assets are {"included" if include_docker else "not included"}.
-{\n    "Kubernetes/Kustomize manifests are included."\n    if include_kubernetes\n    else "Kubernetes/Kustomize manifests are not included."\n}
+{kubernetes_notice}
 
 ## Architecture
 
