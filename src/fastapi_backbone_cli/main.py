@@ -53,7 +53,7 @@ def create(
     console.print(f"  cd {destination}")
     console.print("  uv sync --extra dev")
     console.print("  cp .env.example .env")
-    console.print("  uv run uvicorn <package>.app:create_app --factory --reload")
+    console.print("  make run")
 
 
 @app.command()
