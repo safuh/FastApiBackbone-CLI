@@ -21,7 +21,8 @@ console = Console()
 def create(
     project_name: Annotated[str, typer.Argument(help="New project name, e.g. inventory-api.")],
     output: Annotated[
-        str | None, typer.Option("--output", "-o", help="Parent output directory."),
+        str | None,
+        typer.Option("--output", "-o", help="Parent output directory."),
     ] = None,
     template_ref: Annotated[
         str, typer.Option("--template-ref", help="FastApiBackbone branch, tag, or commit SHA.")
